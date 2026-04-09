@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELLZYY STORE — Marketplace Akun Tepercaya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#dbeafe',
+                        dark: '#1e293b',
+                    },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #1e293b; scroll-behavior: smooth; }
+        .nav-link.active { color: #2563eb; font-weight: 700; border-bottom: 2px solid #2563eb; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #modalOverlay { display: none; background-color: rgba(30, 41, 59, 0.6); backdrop-filter: blur(8px); }
+        #modalOverlay.open { display: flex; }
+        
+        #lightboxOverlay { display: none; background-color: rgba(0, 0, 0, 0.95); z-index: 200; }
+        #lightboxOverlay.open { display: flex; }
+
+        .product-card { background: white; border: 1px solid #e2e8f0; border-radius: 24px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.15); border-color: #3b82f6; }
+        
+        .status-ready { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .status-sold { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        
+        .img-container { height: 200px; width: 100%; overflow: hidden; background: #f1f5f9; position: relative; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
+        .product-card:hover .img-container img { transform: scale(1.1); }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
+            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            </div>
+            <span class="font-extrabold text-xl tracking-tight text-dark uppercase">RELLZYY<span class="text-primary">STR</span></span>
+        </div>
+        <div class="flex gap-2 text-sm font-semibold">
+            <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="nav-link active px-4 py-2 rounded-lg transition-all">Katalog</a>
+            <a href="javascript:void(0)" id="nav-about" onclick="showPage('about')" class="nav-link px-4 py-2 rounded-lg transition-all">Tentang</a>
+        </div>
+    </nav>
+
+    <main id="page-home" class="page active p-6 md:p-10 max-w-7xl mx-auto">
+        <div class="mb-12 text-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-dark mb-3 uppercase tracking-tight">Katalog <span class="text-primary text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Premium</span></h1>
+            <p class="text-slate-500 max-w-md mx-auto">Akun game berkualitas tinggi dengan jaminan keamanan 100%.</p>
+        </div>
+        <div id="gameGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+    </main>
+
+    <main id="page-about" class="page p-6 md:p-10 max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-extrabold text-dark mb-2 uppercase">Tentang <span class="text-primary font-bold">Kami</span></h1>
+            <p class="text-slate-500">Keamanan Anda adalah prioritas utama kami.</p>
+        </div>
+        <div class="grid grid-cols-1 gap-8">
+            <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm transition-hover hover:shadow-md">
+                <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-6">
+                    <i data-lucide="shield-check" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-4">Marketplace Akun Tepercaya</h2>
+                <p class="text-slate-600 leading-relaxed mb-4">
+                    RELLZYY STORE adalah solusi bagi para gamers yang ingin naik level secara instan. Kami memastikan setiap transaksi dilakukan secara transparan dan aman.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <div id="modalOverlay" class="fixed inset-0 z-[100] items-center justify-center p-4" onclick="handleOutsideClick(event)">
+        <div class="bg-white rounded-[32px] w-full max-w-lg overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
+            <div class="relative h-64 w-full overflow-hidden bg-slate-100">
+                <img id="modalImage" src="" alt="Detail" class="w-full h-full object-cover cursor-zoom-in" onclick="openLightbox(this.src)">
+                <div id="modalStatusBadge" class="absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg"></div>
+            </div>
+            
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-6">
+                    <div>
+                        <span id="modalCategory" class="text-[10px] uppercase font-black text-primary tracking-[0.2em]"></span>
+                        <h3 id="modalTitle" class="text-2xl font-extrabold text-dark mt-1 leading-tight"></h3>
+                    </div>
+                    <div id="modalPrice" class="text-lg font-black text-primary bg-blue-50 px-4 py-2 rounded-xl h-fit"></div>
+                </div>
+
+                <div class="mb-8">
+                    <p class="text-slate-400 text-[10px] font-black uppercase mb-4 tracking-widest">Spesifikasi Akun</p>
+                    <ul id="modalIncludes" class="grid grid-cols-1 gap-3"></ul>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all">Tutup</button>
+                    <a id="btnHubungi" href="#" target="_blank" class="flex-[2] bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20">
+                        <i data-lucide="message-circle" class="w-5 h-5"></i> Hubungi Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightboxOverlay" class="fixed inset-0 items-center justify-center p-4 cursor-zoom-out" onclick="closeLightbox()">
+        <img id="lightboxImage" src="" class="max-w-full max-h-full rounded-lg shadow-2xl transition-transform duration-300">
+    </div>
+
+    <script>
+        // DATA PRODUK - Pastikan nama file gambar sesuai dengan yang kamu upload ke GitHub
+        const games = [
+            { 
+                id: 1, 
+                title: 'Vault 250+, SG kayu', 
+                price: 'Rp 60.000', 
+                category: 'Free Fire', 
+                image: '/img/pelasanbulak.jpeg', // Jika di folder, gunakan 'img/pelasanbulak.jpeg'
+                status: 'ready', 
+                includes: ['Semi old', '250+ Vault', 'SG Kayu', 'Akun Aman 100%'] 
+            },
+            { 
+                id: 2, 
+                title: 'Polosan Lumut', 
+                price: 'Rp 100.000', 
+                category: 'Free Fire', 
+                image: '/img/reccalion.jpeg', 
+                status: 'ready', 
+                includes: ['Sg lumut', '+630 Diamond Akun', 'Celana Angel Ungu'] 
+            },
+            { 
+                id: 3, 
+                title: 'Karina KOF Account', 
+                price: 'Rp 50.000', 
+                category: 'Mobile Legends', 
+                image: '/img/karinakof.jpeg', 
+                status: 'ready', 
+                includes: ['Skin Karina KOF', 'Kolektor Senior 3', 'Rank Mythic'] 
+            }
+        ];
+
+        // Konfigurasi WhatsApp
+        const CONFIG = {
+            adminWA: "62895331114471",
+            storeName: "RELLZYY STORE"
+        };
+
+        function initIcons() {
+            lucide.createIcons();
+        }
+
+        function getStatusInfo(status) {
+            return status === 'ready' 
+                ? { text: 'Tersedia', class: 'status-ready' } 
+                : { text: 'Terjual', class: 'status-sold' };
+        }
+
+        function renderKatalog() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = games.map(game => {
+                const info = getStatusInfo(game.status);
+                return `
+                <div class="product-card group flex flex-col" onclick="openDetail(${game.id})">
+                    <div class="img-container">
+                        <img src="${game.image}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/400x300?text=Gambar+Tidak+Ditemukan'">
+                        <div class="absolute top-4 right-4 z-10 px-3 py-1 rounded-full text-[9px] font-black uppercase ${info.class} shadow-md">
+                            ${info.text}
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-[10px] uppercase font-black text-primary tracking-widest mb-1">${game.category}</div>
+                        <h3 class="text-lg font-bold text-dark mb-4 leading-snug flex-grow group-hover:text-primary transition-colors">${game.title}</h3>
+                        <div class="flex justify-between items-center border-t border-slate-50 pt-4">
+                            <span class="text-primary font-black text-xl">${game.price}</span>
+                            <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+            initIcons();
+        }
+
+        function openDetail(id) {
+            const game = games.find(g => g.id === id);
+            const info = getStatusInfo(game.status);
+            
+            document.getElementById('modalImage').src = game.image;
+            document.getElementById('modalTitle').textContent = game.title;
+            document.getElementById('modalCategory').textContent = game.category;
+            document.getElementById('modalPrice').textContent = game.price;
+            
+            const badge = document.getElementById('modalStatusBadge');
+            badge.textContent = info.text;
+            badge.className = `absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg ${info.class}`;
+            
+            document.getElementById('modalIncludes').innerHTML = game.includes.map(item => `
+                <li class="flex items-center gap-3 text-slate-600 text-sm">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-primary shrink-0"></i> ${item}
+                </li>`).join('');
+            
+            const btnWA = document.getElementById('btnHubungi');
+            if(game.status === 'sold') {
+                btnWA.classList.add('opacity-50', 'pointer-events-none');
+                btnWA.innerHTML = `Terjual`;
+            } else {
+                const text = `Halo Admin ${CONFIG.storeName},\n\nSaya ingin membeli akun:\n🔥 *${game.title}*\n💰 Harga: *${game.price}*\n\nApakah masih tersedia?`;
+                btnWA.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(text)}`;
+                btnWA.classList.remove('opacity-50', 'pointer-events-none');
+                btnWA.innerHTML = `<i data-lucide="message-circle" class="w-5 h-5"></i> Hubungi Admin via WA`;
+            }
+            
+            document.getElementById('modalOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            initIcons();
+        }
+
+        function closeModal() { 
+            document.getElementById('modalOverlay').classList.remove('open'); 
+            document.body.style.overflow = 'auto';
+        }
+
+        function handleOutsideClick(e) {
+            if (e.target.id === 'modalOverlay') closeModal();
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightboxImage').src = src;
+            document.getElementById('lightboxOverlay').classList.add('open');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxOverlay').classList.remove('open');
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderKatalog();
+            initIcons();
+        });
+    </script>
+</body>
+</html>
