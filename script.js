@@ -7,7 +7,7 @@ const games = [
         category: 'Free Fire', 
         image: 'img/pelasanbulak.jpeg', // Menggunakan file gambar, bukan emoji
         status: 'ready', 
-        includes: ['Semi old', '250+ Vault', 'SG Kayu'] 
+        includes: ['Semi old', '250+ Vault', 'SG Kayu', 'Log fb, Akun Aman 100%'] 
     },
     { 
         id: 2, 
@@ -16,7 +16,7 @@ const games = [
         category: 'Free Fire', 
         image: 'img/reccalion.jpeg', 
         status: 'ready', 
-        includes: ['Sg lumut', '+630 Diamond', 'Celana Angel Ungu'] 
+        includes: ['Sg lumut', '+630 Diamond', 'Celana Angel Ungu', 'Log tanyakan, Akun Aman 100%'] 
     },
     { 
         id: 3, 
@@ -25,7 +25,7 @@ const games = [
         category: 'Mobile Legends', 
         image: 'img/karinakof.jpeg', 
         status: 'ready', 
-        includes: ['Karina KOF', 'Kolektor Senior 3', 'Rank Tertinggi Mythic'] 
+        includes: ['Karina KOF', 'Kolektor Senior 3', 'Rank Tertinggi Mythic', 'Log moonton free cein, Akun Aman 100%'] 
     }
 ];
 
