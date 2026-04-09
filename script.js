@@ -1,33 +1,3 @@
-// Data Produk Terbaru (Sesuaikan dengan file gambar di GitHub kamu)
-const games = [
-    { 
-        id: 1, 
-        title: 'Vault 250+, SG kayu', 
-        price: 'Rp 60.000', 
-        category: 'Free Fire', 
-        image: 'img/pelasanbulak.jpeg', // Menggunakan file gambar, bukan emoji
-        status: 'ready', 
-        includes: ['Semi old', '250+ Vault', 'SG Kayu', 'Log fb, Akun Aman 100%'] 
-    },
-    { 
-        id: 2, 
-        title: 'Polosan Lumut', 
-        price: 'Rp 100.000', 
-        category: 'Free Fire', 
-        image: 'img/reccalion.jpeg', 
-        status: 'ready', 
-        includes: ['Sg lumut', '+630 Diamond', 'Celana Angel Ungu', 'Log tanyakan, Akun Aman 100%'] 
-    },
-    { 
-        id: 3, 
-        title: 'Karina KOF', 
-        price: 'Rp 50.000', 
-        category: 'Mobile Legends', 
-        image: 'img/karinakof.jpeg', 
-        status: 'ready', 
-        includes: ['Karina KOF', 'Kolektor Senior 3', 'Rank Tertinggi Mythic', 'Log moonton free cein, Akun Aman 100%'] 
-    }
-];
 
 // Inisialisasi Lucide Icons
 lucide.createIcons();
