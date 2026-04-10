@@ -138,7 +138,7 @@
         const games = [
             { id: 1, title: 'Vault 250+, SG kayu', price: 'Rp 65.000', category: 'Free Fire', image: 'img/pelasanbulak.jpeg', status: 'ready', includes: ['Semi old', '250+ Vault', 'SG Kayu'] },
             { id: 2, title: 'Polosan Lumut', price: 'Rp 100.000', category: 'Free Fire', image: 'img/reccalion.jpeg', status: 'ready', includes: ['Sg lumut', '+630 Diamond', 'Celana Angel Ungu'] },
-            { id: 3, title: 'Karina KOF Account', price: 'Rp 50.000', category: 'Mobile Legends', image: 'img/karinakof.jpeg', status: 'ready', includes: ['Skin Karina KOF', 'Rank Mythic', 'Total skin 79'] },
+            { id: 3, title: 'Karina KOF', price: 'Rp 50.000', category: 'Mobile Legends', image: 'img/karinakof.jpeg', status: 'ready', includes: ['Skin Karina KOF', 'Rank Mythic', 'Total skin 79'] },
         ];
 
         const CONFIG = {
@@ -241,22 +241,22 @@
                     <i data-lucide="check-circle-2" class="w-4 h-4 text-primary shrink-0"></i> ${item}
                 </li>`).join('');
             
-            // Format Pesan WA yang menarik
+            // Format Pesan WA: MC diletakkan di bawah Atas Nama
             const btnWA = document.getElementById('btnHubungi');
             const waMessage = 
 `━━━━━━━━━━━━━━━━━━━━━━
 🔥 *ORDER AKUN - ${CONFIG.storeName}* 🔥
 ━━━━━━━━━━━━━━━━━━━━━━
-
-👋 Halo Admin, saya ingin memesan akun berikut:
-
+            
+👋 Halo admin saya ingin memesan akun ini, apakah masih Tersedia?
+            
 📌 *Produk:* ${game.title}
 📂 *Kategori:* ${game.category}
 💰 *Harga:* ${game.price}
 
 📝 *Detail Pembeli:*
-👤 *Atas Nama:* 🤝 *MC Setempat:* Mohon segera diproses ya, terima kasih! ✨
-━━━━━━━━━━━━━━━━━━━━━━`;
+👤 *Atas Nama:* 
+🤝 *MC/Setempat:*`;
 
             btnWA.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(waMessage)}`;
             document.getElementById('modalOverlay').classList.add('open');
