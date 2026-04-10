@@ -61,9 +61,10 @@
             </div>
             <span class="font-extrabold text-lg tracking-tight text-dark uppercase">RELLZYY<span class="text-primary">STR</span></span>
         </div>
-        <div class="flex gap-2 text-xs font-semibold">
-            <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="nav-link active px-3 py-2 rounded-lg">Katalog</a>
-            <a href="javascript:void(0)" id="nav-about" onclick="showPage('about')" class="nav-link px-3 py-2 rounded-lg">Tentang</a>
+        <div class="flex gap-2 text-[10px] md:text-xs font-semibold">
+            <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="nav-link active px-2 md:px-3 py-2 rounded-lg">Katalog</a>
+            <a href="javascript:void(0)" id="nav-sold" onclick="showPage('sold')" class="nav-link px-2 md:px-3 py-2 rounded-lg">Terjual</a>
+            <a href="javascript:void(0)" id="nav-about" onclick="showPage('about')" class="nav-link px-2 md:px-3 py-2 rounded-lg">Tentang</a>
         </div>
     </nav>
 
@@ -87,6 +88,14 @@
 
         <div id="gameGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8"></div>
         <div id="pagination" class="flex justify-center items-center gap-2 mt-10"></div>
+    </main>
+
+    <main id="page-sold" class="page p-4 md:p-10 max-w-7xl mx-auto">
+        <div class="mb-8 text-center">
+            <h1 class="text-2xl md:text-4xl font-extrabold text-dark mb-2 uppercase">Akun <span class="text-red-500">Terjual</span></h1>
+            <p class="text-slate-500 text-sm max-w-xs mx-auto">Riwayat akun premium yang telah laku terjual.</p>
+        </div>
+        <div id="soldGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8"></div>
     </main>
 
     <main id="page-about" class="page p-6 md:p-10 max-w-4xl mx-auto">
@@ -139,6 +148,7 @@
             { id: 1, title: 'Vault 250+, SG kayu', price: 'Rp 65.000', category: 'Free Fire', image: 'img/pelasanbulak.jpeg', status: 'ready', includes: ['Semi old', '250+ Vault', 'SG Kayu'] },
             { id: 2, title: 'Polosan Lumut', price: 'Rp 100.000', category: 'Free Fire', image: 'img/reccalion.jpeg', status: 'ready', includes: ['Sg lumut', '+630 Diamond', 'Celana Angel Ungu'] },
             { id: 3, title: 'Karina KOF', price: 'Rp 50.000', category: 'Mobile Legends', image: 'img/karinakof.jpeg', status: 'ready', includes: ['Skin Karina KOF', 'Rank Mythic', 'Total skin 79'] },
+            { id: 4, title: 'Akun Sultan 100+ Skin', price: 'Rp 500.000', category: 'Free Fire', image: 'img/sold1.jpeg', status: 'sold', includes: ['Full Evo', 'Old Account', 'Safe Login'] },
         ];
 
         const CONFIG = {
@@ -172,7 +182,10 @@
         function renderKatalog() {
             const grid = document.getElementById('gameGrid');
             const paginationContainer = document.getElementById('pagination');
-            const filteredData = currentFilter === 'Semua' ? games : games.filter(g => g.category === currentFilter);
+            
+            // Filter hanya yang statusnya 'ready' untuk halaman Katalog
+            const readyItems = games.filter(g => g.status === 'ready');
+            const filteredData = currentFilter === 'Semua' ? readyItems : readyItems.filter(g => g.category === currentFilter);
 
             const startIndex = (currentPage - 1) * CONFIG.itemsPerPage;
             const endIndex = startIndex + CONFIG.itemsPerPage;
@@ -181,29 +194,7 @@
             if (paginatedItems.length === 0) {
                 grid.innerHTML = `<div class="col-span-2 lg:col-span-3 text-center py-20 text-slate-400 text-sm">Produk tidak ditemukan...</div>`;
             } else {
-                grid.innerHTML = paginatedItems.map(game => `
-                    <div class="product-card group flex flex-col relative" onclick="openDetail(${game.id})">
-                        <div class="img-container">
-                            <img src="${game.image}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-                            <div class="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-full text-[8px] font-black uppercase ${game.status === 'ready' ? 'status-ready' : 'status-sold'} shadow-sm">
-                                ${game.status === 'ready' ? 'Tersedia' : 'Terjual'}
-                            </div>
-                            <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span class="bg-white text-primary text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Lihat Detail Akun</span>
-                            </div>
-                        </div>
-                        <div class="p-3 md:p-5 flex flex-col flex-grow">
-                            <div class="text-[8px] uppercase font-black text-primary tracking-widest mb-1">${game.category}</div>
-                            <h3 class="text-xs md:text-base font-bold text-dark mb-2 leading-tight flex-grow line-clamp-2">${game.title}</h3>
-                            <div class="flex justify-between items-center border-t border-slate-50 pt-3">
-                                <span class="text-primary font-black text-sm md:text-lg">${game.price}</span>
-                                <div class="text-[9px] font-bold text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1">
-                                    Detail <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
+                grid.innerHTML = paginatedItems.map(game => createCardHTML(game)).join('');
             }
 
             const totalPages = Math.ceil(filteredData.length / CONFIG.itemsPerPage);
@@ -220,6 +211,45 @@
             lucide.createIcons();
         }
 
+        // Fungsi Render Halaman Terjual
+        function renderSold() {
+            const grid = document.getElementById('soldGrid');
+            const soldItems = games.filter(g => g.status === 'sold');
+
+            if (soldItems.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 lg:col-span-3 text-center py-20 text-slate-400 text-sm">Belum ada riwayat akun terjual.</div>`;
+            } else {
+                grid.innerHTML = soldItems.map(game => createCardHTML(game)).join('');
+            }
+            lucide.createIcons();
+        }
+
+        function createCardHTML(game) {
+            return `
+                <div class="product-card group flex flex-col relative" onclick="openDetail(${game.id})">
+                    <div class="img-container">
+                        <img src="${game.image}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+                        <div class="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-full text-[8px] font-black uppercase ${game.status === 'ready' ? 'status-ready' : 'status-sold'} shadow-sm">
+                            ${game.status === 'ready' ? 'Tersedia' : 'Terjual'}
+                        </div>
+                        <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-white text-primary text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Lihat Detail Akun</span>
+                        </div>
+                    </div>
+                    <div class="p-3 md:p-5 flex flex-col flex-grow">
+                        <div class="text-[8px] uppercase font-black text-primary tracking-widest mb-1">${game.category}</div>
+                        <h3 class="text-xs md:text-base font-bold text-dark mb-2 leading-tight flex-grow line-clamp-2">${game.title}</h3>
+                        <div class="flex justify-between items-center border-t border-slate-50 pt-3">
+                            <span class="text-primary font-black text-sm md:text-lg">${game.price}</span>
+                            <div class="text-[9px] font-bold text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1">
+                                Detail <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         function changePage(page) {
             currentPage = page;
             renderKatalog();
@@ -233,32 +263,28 @@
             document.getElementById('modalTitle').textContent = game.title;
             document.getElementById('modalCategory').textContent = game.category;
             document.getElementById('modalPrice').textContent = game.price;
+            
             const badge = document.getElementById('modalStatusBadge');
             badge.textContent = game.status === 'ready' ? 'Tersedia' : 'Terjual';
             badge.className = `absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg ${game.status === 'ready' ? 'status-ready' : 'status-sold'}`;
+            
             document.getElementById('modalIncludes').innerHTML = game.includes.map(item => `
                 <li class="flex items-center gap-3 text-slate-600 text-xs">
                     <i data-lucide="check-circle-2" class="w-4 h-4 text-primary shrink-0"></i> ${item}
                 </li>`).join('');
             
-            // Format Pesan WA: MC diletakkan di bawah Atas Nama
             const btnWA = document.getElementById('btnHubungi');
-            const waMessage = 
-`━━━━━━━━━━━━━━━━━━━━━━
-🔥 *ORDER AKUN - ${CONFIG.storeName}* 🔥
-━━━━━━━━━━━━━━━━━━━━━━
-            
-👋 Halo admin saya ingin memesan akun ini, apakah masih Tersedia?
-            
-📌 *Produk:* ${game.title}
-📂 *Kategori:* ${game.category}
-💰 *Harga:* ${game.price}
+            if(game.status === 'sold') {
+                btnWA.classList.add('pointer-events-none', 'bg-slate-400');
+                btnWA.innerHTML = `<i data-lucide="x-circle" class="w-4 h-4"></i> Sudah Terjual`;
+            } else {
+                btnWA.classList.remove('pointer-events-none', 'bg-slate-400');
+                btnWA.classList.add('bg-primary');
+                btnWA.innerHTML = `<i data-lucide="message-circle" class="w-4 h-4"></i> Beli Sekarang`;
+                const waMessage = `━━━━━━━━━━━━━━━━━━━━━━\n🔥 *ORDER AKUN - ${CONFIG.storeName}* 🔥\n━━━━━━━━━━━━━━━━━━━━━━\n            \n👋 Halo admin saya ingin memesan akun ini, apakah masih Tersedia?\n            \n📌 *Produk:* ${game.title}\n📂 *Kategori:* ${game.category}\n💰 *Harga:* ${game.price}\n\n📝 *Detail Pembeli:*\n👤 *Atas Nama:* \n🤝 *MC/Setempat:*`;
+                btnWA.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(waMessage)}`;
+            }
 
-📝 *Detail Pembeli:*
-👤 *Atas Nama:* 
-🤝 *MC/Setempat:*`;
-
-            btnWA.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(waMessage)}`;
             document.getElementById('modalOverlay').classList.add('open');
             document.body.style.overflow = 'hidden';
             lucide.createIcons();
@@ -274,6 +300,10 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             document.getElementById('nav-' + pageId).classList.add('active');
+            
+            if (pageId === 'sold') renderSold();
+            if (pageId === 'home') renderKatalog();
+            
             window.scrollTo(0, 0);
         }
 
