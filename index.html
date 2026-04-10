@@ -27,101 +27,94 @@
     <style>
         body { background-color: #f8fafc; color: #1e293b; scroll-behavior: smooth; }
         .nav-link.active { color: #2563eb; font-weight: 700; border-bottom: 2px solid #2563eb; }
-        
-        /* Animasi Halaman */
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Modal & Lightbox */
         #modalOverlay { display: none; background-color: rgba(30, 41, 59, 0.6); backdrop-filter: blur(8px); }
         #modalOverlay.open { display: flex; }
         #lightboxOverlay { display: none; background-color: rgba(0, 0, 0, 0.95); z-index: 200; }
         #lightboxOverlay.open { display: flex; }
 
-        /* Card Styling */
-        .product-card { background: white; border: 1px solid #e2e8f0; border-radius: 24px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; cursor: pointer; }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.15); border-color: #3b82f6; }
+        .product-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; cursor: pointer; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1); border-color: #3b82f6; }
         
         .status-ready { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
         .status-sold { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
         
-        .img-container { height: 200px; width: 100%; overflow: hidden; background: #f1f5f9; position: relative; }
+        /* Tinggi gambar disesuaikan untuk mobile agar tidak terlalu panjang */
+        .img-container { height: 160px; width: 100%; overflow: hidden; background: #f1f5f9; position: relative; }
+        @media (min-width: 768px) { .img-container { height: 200px; } }
+        
         .img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
         .product-card:hover .img-container img { transform: scale(1.1); }
+
+        .pagination-btn.active { background-color: #2563eb; color: white; }
     </style>
 </head>
 <body class="font-sans antialiased">
 
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-sm">
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 px-4 py-4 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
-                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            <div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                <i data-lucide="shopping-cart" class="w-5 h-5"></i>
             </div>
-            <span class="font-extrabold text-xl tracking-tight text-dark uppercase">RELLZYY<span class="text-primary">STR</span></span>
+            <span class="font-extrabold text-lg tracking-tight text-dark uppercase">RELLZYY<span class="text-primary">STR</span></span>
         </div>
-        <div class="flex gap-2 text-sm font-semibold">
-            <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="nav-link active px-4 py-2 rounded-lg">Katalog</a>
-            <a href="javascript:void(0)" id="nav-about" onclick="showPage('about')" class="nav-link px-4 py-2 rounded-lg">Tentang</a>
+        <div class="flex gap-2 text-xs font-semibold">
+            <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="nav-link active px-3 py-2 rounded-lg">Katalog</a>
+            <a href="javascript:void(0)" id="nav-about" onclick="showPage('about')" class="nav-link px-3 py-2 rounded-lg">Tentang</a>
         </div>
     </nav>
 
-    <main id="page-home" class="page active p-6 md:p-10 max-w-7xl mx-auto">
-        <div class="mb-12 text-center">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-dark mb-3 uppercase tracking-tight">Katalog <span class="text-primary">Premium</span></h1>
-            <p class="text-slate-500 max-w-md mx-auto">Akun game berkualitas tinggi dengan jaminan keamanan 100%.</p>
+    <main id="page-home" class="page active p-4 md:p-10 max-w-7xl mx-auto">
+        <div class="mb-8 text-center">
+            <h1 class="text-2xl md:text-4xl font-extrabold text-dark mb-2 uppercase">Katalog <span class="text-primary">Premium</span></h1>
+            <p class="text-slate-500 text-sm max-w-xs mx-auto">Akun game berkualitas dengan jaminan keamanan.</p>
         </div>
-        <div id="gameGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div id="gameGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
+            </div>
+
+        <div id="pagination" class="flex justify-center items-center gap-2 mt-10">
             </div>
     </main>
 
     <main id="page-about" class="page p-6 md:p-10 max-w-4xl mx-auto">
         <div class="text-center mb-12">
             <h1 class="text-3xl font-extrabold text-dark mb-2 uppercase">Tentang <span class="text-primary">Kami</span></h1>
-            <p class="text-slate-500">Keamanan Anda adalah prioritas utama kami.</p>
         </div>
         <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-            <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-6">
-                <i data-lucide="shield-check" class="w-8 h-8"></i>
-            </div>
-            <h2 class="text-2xl font-bold mb-4">Marketplace Akun Tepercaya</h2>
             <p class="text-slate-600 leading-relaxed">
-                RELLZYY STORE adalah solusi bagi para gamers yang ingin mendapatkan akun berkualitas secara instan. Kami memastikan setiap transaksi dilakukan secara transparan dan aman dengan garansi anti-hackback.
+                RELLZYY STORE adalah solusi bagi para gamers yang ingin mendapatkan akun berkualitas secara instan. Kami memastikan setiap transaksi dilakukan secara transparan dan aman.
             </p>
         </div>
     </main>
 
     <div id="modalOverlay" class="fixed inset-0 z-[100] items-center justify-center p-4" onclick="handleOutsideClick(event)">
-        <div class="bg-white rounded-[32px] w-full max-w-lg overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
-            <div class="relative h-64 w-full overflow-hidden bg-slate-100">
+        <div class="bg-white rounded-[32px] w-full max-w-lg overflow-hidden relative shadow-2xl">
+            <div class="relative h-56 md:h-64 w-full overflow-hidden bg-slate-100">
                 <img id="modalImage" src="" alt="Detail" class="w-full h-full object-cover cursor-zoom-in" onclick="openLightbox(this.src)">
-                <div id="modalStatusBadge" class="absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg"></div>
-                
+                <div id="modalStatusBadge" class="absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase shadow-lg"></div>
                 <div class="absolute bottom-2 left-0 right-0 text-center pointer-events-none">
-                    <span class="bg-black/50 text-white text-[9px] px-3 py-1 rounded-full backdrop-blur-sm">
-                        Pencet gambar untuk memperbesar
-                    </span>
+                    <span class="bg-black/50 text-white text-[9px] px-3 py-1 rounded-full backdrop-blur-sm">Pencet gambar untuk memperbesar</span>
                 </div>
             </div>
-            
-            <div class="p-8">
-                <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-6">
+            <div class="p-6 md:p-8">
+                <div class="flex justify-between items-start mb-4 border-b border-slate-100 pb-4">
                     <div>
-                        <span id="modalCategory" class="text-[10px] uppercase font-black text-primary tracking-[0.2em]"></span>
-                        <h3 id="modalTitle" class="text-2xl font-extrabold text-dark mt-1 leading-tight"></h3>
+                        <span id="modalCategory" class="text-[9px] uppercase font-black text-primary tracking-widest"></span>
+                        <h3 id="modalTitle" class="text-xl font-extrabold text-dark mt-1 leading-tight"></h3>
                     </div>
-                    <div id="modalPrice" class="text-lg font-black text-primary bg-blue-50 px-4 py-2 rounded-xl h-fit"></div>
+                    <div id="modalPrice" class="text-md font-black text-primary bg-blue-50 px-3 py-2 rounded-xl h-fit"></div>
                 </div>
-
-                <div class="mb-8">
-                    <p class="text-slate-400 text-[10px] font-black uppercase mb-4 tracking-widest">Spesifikasi Akun</p>
-                    <ul id="modalIncludes" class="grid grid-cols-1 gap-3"></ul>
+                <div class="mb-6">
+                    <ul id="modalIncludes" class="grid grid-cols-1 gap-2"></ul>
                 </div>
-
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all">Tutup</button>
-                    <a id="btnHubungi" href="#" target="_blank" class="flex-[2] bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20">
-                        <i data-lucide="message-circle" class="w-5 h-5"></i> Hubungi Admin
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button onclick="closeModal()" class="bg-slate-100 text-slate-600 py-3 px-6 rounded-xl font-bold">Tutup</button>
+                    <a id="btnHubungi" href="#" target="_blank" class="flex-grow bg-primary text-white py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> Beli Sekarang
                     </a>
                 </div>
             </div>
@@ -133,119 +126,99 @@
     </div>
 
     <script>
-        // Data Produk - Gunakan jalur file yang tepat sesuai folder GitHub Anda
+        // Tambahkan banyak data di sini untuk mengetes fitur per page
         const games = [
-            { 
-                id: 1, 
-                title: 'Vault 250+, SG kayu', 
-                price: 'Rp 70.000', 
-                category: 'Free Fire', 
-                image: 'img/pelasanbulak.jpeg', 
-                status: 'ready', 
-                includes: ['Semi old', '250+ Vault', 'SG Kayu', 'Log fb, Akun Aman 100%'] 
-            },
-            { 
-                id: 2, 
-                title: 'Polosan Lumut', 
-                price: 'Rp 100.000', 
-                category: 'Free Fire', 
-                image: 'img/reccalion.jpeg', 
-                status: 'ready', 
-                includes: ['Sg lumut', '+630 Diamond Akun', 'Celana Angel Ungu', 'Log tanyakan, Akun Aman 100%'] 
-            },
-            { 
-                id: 3, 
-                title: 'Karina KOF Account', 
-                price: 'Rp 50.000', 
-                category: 'Mobile Legends', 
-                image: 'img/karinakof.jpeg', 
-                status: 'ready', 
-                includes: ['Skin Karina KOF', 'Kolektor Senior 3', 'Rank Mythic', 'Data Aman 100%'] 
-            }
+            { id: 1, title: 'Vault 250+, SG kayu', price: 'Rp 70.000', category: 'Free Fire', image: 'img/pelasanbulak.jpeg', status: 'ready', includes: ['Semi old', '250+ Vault', 'SG Kayu'] },
+            { id: 2, title: 'Polosan Lumut', price: 'Rp 100.000', category: 'Free Fire', image: 'img/reccalion.jpeg', status: 'ready', includes: ['Sg lumut', '+630 Diamond', 'Celana Angel Ungu'] },
+            { id: 3, title: 'Karina KOF Account', price: 'Rp 50.000', category: 'Mobile Legends', image: 'img/karinakof.jpeg', status: 'ready', includes: ['Skin Karina KOF', 'Rank Mythic'] },
+            { id: 4, title: 'Akun Sultan 4', price: 'Rp 150.000', category: 'Free Fire', image: 'img/pelasanbulak.jpeg', status: 'ready', includes: ['Full Skin', 'Data Polos'] },
+            { id: 5, title: 'Akun Sultan 5', price: 'Rp 200.000', category: 'Mobile Legends', image: 'img/karinakof.jpeg', status: 'sold', includes: ['Full Hero', 'Skin Epic'] },
+            { id: 6, title: 'Akun Sultan 6', price: 'Rp 90.000', category: 'Free Fire', image: 'img/reccalion.jpeg', status: 'ready', includes: ['Sg 2', 'Bundle Old'] }
         ];
 
         const CONFIG = {
             adminWA: "62895331114471",
-            storeName: "RELLZYY STORE"
+            storeName: "RELLZYY STORE",
+            itemsPerPage: 4 // MAKSIMAL 4 PRODUK PER HALAMAN
         };
+
+        let currentPage = 1;
 
         function renderKatalog() {
             const grid = document.getElementById('gameGrid');
-            grid.innerHTML = games.map(game => `
+            const paginationContainer = document.getElementById('pagination');
+            
+            // Hitung Index
+            const startIndex = (currentPage - 1) * CONFIG.itemsPerPage;
+            const endIndex = startIndex + CONFIG.itemsPerPage;
+            const paginatedItems = games.slice(startIndex, endIndex);
+
+            // Render Produk
+            grid.innerHTML = paginatedItems.map(game => `
                 <div class="product-card group flex flex-col" onclick="openDetail(${game.id})">
                     <div class="img-container">
                         <img src="${game.image}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/400x300?text=Gambar+Hilang'">
-                        <div class="absolute top-4 right-4 z-10 px-3 py-1 rounded-full text-[9px] font-black uppercase ${game.status === 'ready' ? 'status-ready' : 'status-sold'} shadow-md">
+                        <div class="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-full text-[8px] font-black uppercase ${game.status === 'ready' ? 'status-ready' : 'status-sold'} shadow-sm">
                             ${game.status === 'ready' ? 'Tersedia' : 'Terjual'}
                         </div>
                     </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <div class="text-[10px] uppercase font-black text-primary tracking-widest mb-1">${game.category}</div>
-                        <h3 class="text-lg font-bold text-dark mb-4 leading-snug flex-grow group-hover:text-primary transition-colors">${game.title}</h3>
-                        <div class="flex justify-between items-center border-t border-slate-50 pt-4">
-                            <span class="text-primary font-black text-xl">${game.price}</span>
-                            <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                            </div>
+                    <div class="p-3 md:p-5 flex flex-col flex-grow">
+                        <div class="text-[8px] uppercase font-black text-primary tracking-widest mb-1">${game.category}</div>
+                        <h3 class="text-xs md:text-base font-bold text-dark mb-2 leading-tight flex-grow line-clamp-2">${game.title}</h3>
+                        <div class="flex justify-between items-center border-t border-slate-50 pt-3">
+                            <span class="text-primary font-black text-sm md:text-lg">${game.price}</span>
                         </div>
                     </div>
                 </div>
             `).join('');
+
+            // Render Button Pagination
+            const totalPages = Math.ceil(games.length / CONFIG.itemsPerPage);
+            let paginationHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                paginationHTML += `
+                    <button onclick="changePage(${i})" class="pagination-btn w-8 h-8 rounded-lg font-bold text-xs transition-all border ${currentPage === i ? 'bg-primary text-white border-primary' : 'bg-white text-slate-400 border-slate-200'}">
+                        ${i}
+                    </button>
+                `;
+            }
+            paginationContainer.innerHTML = paginationHTML;
+            
             lucide.createIcons();
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            renderKatalog();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function openDetail(id) {
             const game = games.find(g => g.id === id);
             if (!game) return;
-
             document.getElementById('modalImage').src = game.image;
             document.getElementById('modalTitle').textContent = game.title;
             document.getElementById('modalCategory').textContent = game.category;
             document.getElementById('modalPrice').textContent = game.price;
-            
             const badge = document.getElementById('modalStatusBadge');
             badge.textContent = game.status === 'ready' ? 'Tersedia' : 'Terjual';
             badge.className = `absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg ${game.status === 'ready' ? 'status-ready' : 'status-sold'}`;
-            
             document.getElementById('modalIncludes').innerHTML = game.includes.map(item => `
-                <li class="flex items-center gap-3 text-slate-600 text-sm">
+                <li class="flex items-center gap-3 text-slate-600 text-xs">
                     <i data-lucide="check-circle-2" class="w-4 h-4 text-primary shrink-0"></i> ${item}
                 </li>`).join('');
-            
             const btnWA = document.getElementById('btnHubungi');
-            if(game.status === 'sold') {
-                btnWA.classList.add('opacity-50', 'pointer-events-none');
-                btnWA.innerHTML = `Stok Habis`;
-            } else {
-                const text = `Halo Admin ${CONFIG.storeName},\n\nSaya berminat membeli akun:\n🔥 *${game.title}*\n💰 Harga: *${game.price}*\n\nApakah masih tersedia?`;
-                btnWA.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(text)}`;
-                btnWA.classList.remove('opacity-50', 'pointer-events-none');
-                btnWA.innerHTML = `<i data-lucide="message-circle" class="w-5 h-5"></i> Hubungi Admin via WA`;
-            }
-            
+            const text = `Halo Admin ${CONFIG.storeName}, saya berminat membeli: *${game.title}* (${game.price})`;
+            btnWA.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(text)}`;
             document.getElementById('modalOverlay').classList.add('open');
             document.body.style.overflow = 'hidden';
             lucide.createIcons();
         }
 
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('open');
-            document.body.style.overflow = 'auto';
-        }
-
-        function handleOutsideClick(e) {
-            if (e.target.id === 'modalOverlay') closeModal();
-        }
-
-        function openLightbox(src) {
-            document.getElementById('lightboxImage').src = src;
-            document.getElementById('lightboxOverlay').classList.add('open');
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightboxOverlay').classList.remove('open');
-        }
-
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = 'auto'; }
+        function handleOutsideClick(e) { if (e.target.id === 'modalOverlay') closeModal(); }
+        function openLightbox(src) { document.getElementById('lightboxImage').src = src; document.getElementById('lightboxOverlay').classList.add('open'); }
+        function closeLightbox() { document.getElementById('lightboxOverlay').classList.remove('open'); }
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -254,9 +227,7 @@
             window.scrollTo(0, 0);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderKatalog();
-        });
+        document.addEventListener('DOMContentLoaded', renderKatalog);
     </script>
 </body>
 </html>
