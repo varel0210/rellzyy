@@ -33,7 +33,9 @@
         
         #modalOverlay { display: none; background-color: rgba(30, 41, 59, 0.6); backdrop-filter: blur(8px); }
         #modalOverlay.open { display: flex; }
-        
+        #lightboxOverlay { display: none; background-color: rgba(0, 0, 0, 0.95); z-index: 200; }
+        #lightboxOverlay.open { display: flex; }
+
         .product-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; cursor: pointer; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1); border-color: #3b82f6; }
         
@@ -43,9 +45,9 @@
         .img-container { height: 160px; width: 100%; overflow: hidden; background: #f1f5f9; position: relative; }
         @media (min-width: 768px) { .img-container { height: 200px; } }
         
-        .img-container img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Custom Scrollbar untuk Filter */
+        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
+        .product-card:hover .img-container img { transform: scale(1.1); }
+
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -72,7 +74,7 @@
         </div>
 
         <div class="flex gap-2 overflow-x-auto pb-6 hide-scrollbar justify-start md:justify-center">
-            <button onclick="setFilter('Semua')" id="filter-Semua" class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-slate-200 bg-white text-slate-500 active-filter shadow-sm">
+            <button onclick="setFilter('Semua')" id="filter-Semua" class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-slate-200 bg-white text-slate-500 shadow-sm">
                 Semua
             </button>
             <button onclick="setFilter('Free Fire')" id="filter-Free-Fire" class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-slate-200 bg-white text-slate-500 shadow-sm">
@@ -83,18 +85,29 @@
             </button>
         </div>
 
-        <div id="gameGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
-            </div>
+        <div id="gameGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8"></div>
+        <div id="pagination" class="flex justify-center items-center gap-2 mt-10"></div>
+    </main>
 
-        <div id="pagination" class="flex justify-center items-center gap-2 mt-10">
-            </div>
+    <main id="page-about" class="page p-6 md:p-10 max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-extrabold text-dark mb-2 uppercase">Tentang <span class="text-primary">Kami</span></h1>
+        </div>
+        <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
+            <p class="text-slate-600 leading-relaxed">
+                RELLZYY STORE adalah marketplace tepercaya bagi para gamers yang ingin mendapatkan akun berkualitas dengan proses instan. Kami berkomitmen untuk menyediakan layanan yang transparan, aman, dan responsif. Setiap akun yang kami tawarkan telah melewati tahap pengecekan keamanan untuk menjamin kepuasan pembeli.
+            </p>
+        </div>
     </main>
 
     <div id="modalOverlay" class="fixed inset-0 z-[100] items-center justify-center p-4" onclick="handleOutsideClick(event)">
         <div class="bg-white rounded-[32px] w-full max-w-lg overflow-hidden relative shadow-2xl">
             <div class="relative h-56 md:h-64 w-full overflow-hidden bg-slate-100">
-                <img id="modalImage" src="" alt="Detail" class="w-full h-full object-cover">
+                <img id="modalImage" src="" alt="Detail" class="w-full h-full object-cover cursor-zoom-in" onclick="openLightbox(this.src)">
                 <div id="modalStatusBadge" class="absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase shadow-lg"></div>
+                <div class="absolute bottom-2 left-0 right-0 text-center pointer-events-none">
+                    <span class="bg-black/50 text-white text-[9px] px-3 py-1 rounded-full backdrop-blur-sm">Pencet gambar untuk memperbesar</span>
+                </div>
             </div>
             <div class="p-6 md:p-8">
                 <div class="flex justify-between items-start mb-4 border-b border-slate-100 pb-4">
@@ -117,6 +130,10 @@
         </div>
     </div>
 
+    <div id="lightboxOverlay" class="fixed inset-0 items-center justify-center p-4 cursor-zoom-out" onclick="closeLightbox()">
+        <img id="lightboxImage" src="" class="max-w-full max-h-full rounded-lg shadow-2xl">
+    </div>
+
     <script>
         const games = [
             { id: 1, title: 'Vault 250+, SG kayu', price: 'Rp 65.000', category: 'Free Fire', image: 'img/pelasanbulak.jpeg', status: 'ready', includes: ['Semi old', '250+ Vault', 'SG Kayu'] },
@@ -135,7 +152,7 @@
 
         function setFilter(category) {
             currentFilter = category;
-            currentPage = 1; // Reset ke halaman 1 saat filter berubah
+            currentPage = 1;
             updateFilterUI();
             renderKatalog();
         }
@@ -155,18 +172,12 @@
         function renderKatalog() {
             const grid = document.getElementById('gameGrid');
             const paginationContainer = document.getElementById('pagination');
-            
-            // Filter Data
-            const filteredData = currentFilter === 'Semua' 
-                ? games 
-                : games.filter(g => g.category === currentFilter);
+            const filteredData = currentFilter === 'Semua' ? games : games.filter(g => g.category === currentFilter);
 
-            // Hitung Index
             const startIndex = (currentPage - 1) * CONFIG.itemsPerPage;
             const endIndex = startIndex + CONFIG.itemsPerPage;
             const paginatedItems = filteredData.slice(startIndex, endIndex);
 
-            // Render Produk
             if (paginatedItems.length === 0) {
                 grid.innerHTML = `<div class="col-span-2 lg:col-span-3 text-center py-20 text-slate-400 text-sm">Produk tidak ditemukan...</div>`;
             } else {
@@ -189,7 +200,6 @@
                 `).join('');
             }
 
-            // Render Pagination
             const totalPages = Math.ceil(filteredData.length / CONFIG.itemsPerPage);
             let paginationHTML = '';
             if (totalPages > 1) {
@@ -210,7 +220,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Fungsi openDetail, closeModal, showPage tetap sama seperti sebelumnya
         function openDetail(id) {
             const game = games.find(g => g.id === id);
             if (!game) return;
@@ -226,8 +235,8 @@
                     <i data-lucide="check-circle-2" class="w-4 h-4 text-primary shrink-0"></i> ${item}
                 </li>`).join('');
             const btnWA = document.getElementById('btnHubungi');
-            const text = `Halo Admin RELLZYY STORE, saya berminat membeli: *${game.title}* (${game.price})`;
-            btnWA.href = `https://wa.me/62895331114471?text=${encodeURIComponent(text)}`;
+            const text = `Halo Admin ${CONFIG.storeName}, saya berminat membeli: *${game.title}* (${game.price})`;
+            btnWA.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(text)}`;
             document.getElementById('modalOverlay').classList.add('open');
             document.body.style.overflow = 'hidden';
             lucide.createIcons();
@@ -235,12 +244,15 @@
 
         function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = 'auto'; }
         function handleOutsideClick(e) { if (e.target.id === 'modalOverlay') closeModal(); }
-        
+        function openLightbox(src) { document.getElementById('lightboxImage').src = src; document.getElementById('lightboxOverlay').classList.add('open'); }
+        function closeLightbox() { document.getElementById('lightboxOverlay').classList.remove('open'); }
+
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             document.getElementById('nav-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
