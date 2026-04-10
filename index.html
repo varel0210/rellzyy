@@ -123,6 +123,10 @@
                     <div>
                         <span id="modalCategory" class="text-[9px] uppercase font-black text-primary tracking-widest"></span>
                         <h3 id="modalTitle" class="text-xl font-extrabold text-dark mt-1 leading-tight"></h3>
+                        <div class="mt-1 flex items-center gap-1.5">
+                            <i data-lucide="key-round" class="w-3 h-3 text-slate-400"></i>
+                            <span id="modalLogin" class="text-[10px] font-bold text-slate-500"></span>
+                        </div>
                     </div>
                     <div id="modalPrice" class="text-md font-black text-primary bg-blue-50 px-3 py-2 rounded-xl h-fit"></div>
                 </div>
@@ -145,16 +149,16 @@
 
     <script>
         const games = [
-            //ready
-            { id: 1, title: 'Vault 250+, SG kayu', price: 'Rp 65.000', category: 'Free Fire', image: 'img/pelasanbulak.jpeg', status: 'ready', includes: ['Semi old', '250+ Vault', 'SG Kayu'] },
-            { id: 2, title: 'Polosan Lumut', price: 'Rp 100.000', category: 'Free Fire', image: 'img/reccalion.jpeg', status: 'ready', includes: ['Sg lumut', '+630 Diamond', 'Celana Angel Ungu'] },
-            { id: 3, title: 'Karina KOF', price: 'Rp 50.000', category: 'Mobile Legends', image: 'img/karinakof.jpeg', status: 'ready', includes: ['Skin Karina KOF', 'Rank Mythic', 'Total skin 79'] },
-            { id: 4, title: 'Vault 250+, Evo scar mega', price: 'Rp 70.000', category: 'Free Fire', image: 'img/IMG_20260410_131935_752.webp', status: 'ready', includes: ['old 9 digit', '250+ Vault', 'Evo megalodon', 'SG Kayu'] },
-            //sold
-            { id: 5, title: 'Lumut + Evo mp40', price: 'Rp 120.000', category: 'Free Fire', image: 'img/IMG_20260410_100419_993.webp', status: 'sold', includes: ['Sold'] },
-            { id: 6, title: 'Megumi, Sg kayu', price: 'Rp 50.000', category: 'Free Fire', image: 'img/IMG_20260410_100541_657.webp', status: 'sold', includes: ['Sold'] },
-            { id: 7, title: 'Terompet, Celana puma', price: 'Rp 100.000', category: 'Free Fire', image: 'img/IMG_20260410_100755_005.webp', status: 'sold', includes: ['Sold'] },
-            { id: 8, title: 'Sg evo, Bundle budi', price: 'Rp 80.000', category: 'Free Fire', image: 'img/IMG_20260410_132817_496.webp', status: 'sold', includes: ['Sold'] },
+            // ready
+            { id: 1, title: 'Vault 250+, SG kayu', price: 'Rp 65.000', category: 'Free Fire', loginVia: 'Facebook', image: 'img/pelasanbulak.jpeg', status: 'ready', includes: ['Semi old', '250+ Vault', 'SG Kayu'] },
+            { id: 2, title: 'Polosan Lumut', price: 'Rp 100.000', category: 'Free Fire', loginVia: 'Google', image: 'img/reccalion.jpeg', status: 'ready', includes: ['Sg lumut', '+630 Diamond', 'Celana Angel Ungu'] },
+            { id: 3, title: 'Karina KOF', price: 'Rp 50.000', category: 'Mobile Legends', loginVia: 'Moonton', image: 'img/karinakof.jpeg', status: 'ready', includes: ['Skin Karina KOF', 'Rank Mythic', 'Total skin 79'] },
+            { id: 4, title: 'Vault 250+, Evo scar mega', price: 'Rp 70.000', category: 'Free Fire', loginVia: 'Facebook', image: 'img/IMG_20260410_131935_752.webp', status: 'ready', includes: ['old 9 digit', '250+ Vault', 'Evo megalodon', 'SG Kayu'] },
+            // sold
+            { id: 5, title: 'Lumut + Evo mp40', price: 'Rp 120.000', category: 'Free Fire', loginVia: 'Google', image: 'img/IMG_20260410_100419_993.webp', status: 'sold', includes: ['Sold'] },
+            { id: 6, title: 'Megumi, Sg kayu', price: 'Rp 50.000', category: 'Free Fire', loginVia: 'Google', image: 'img/IMG_20260410_100541_657.webp', status: 'sold', includes: ['Sold'] },
+            { id: 7, title: 'Terompet, Celana puma', price: 'Rp 100.000', category: 'Free Fire', loginVia: 'Google', image: 'img/IMG_20260410_100755_005.webp', status: 'sold', includes: ['Sold'] },
+            { id: 8, title: 'Sg evo, Bundle budi', price: 'Rp 80.000', category: 'Free Fire', loginVia: 'Google', image: 'img/IMG_20260410_132817_496.webp', status: 'sold', includes: ['Sold'] },
         ];
 
         const CONFIG = {
@@ -189,7 +193,6 @@
             const grid = document.getElementById('gameGrid');
             const paginationContainer = document.getElementById('pagination');
             
-            // Filter hanya yang statusnya 'ready' untuk halaman Katalog
             const readyItems = games.filter(g => g.status === 'ready');
             const filteredData = currentFilter === 'Semua' ? readyItems : readyItems.filter(g => g.category === currentFilter);
 
@@ -217,7 +220,6 @@
             lucide.createIcons();
         }
 
-        // Fungsi Render Halaman Terjual
         function renderSold() {
             const grid = document.getElementById('soldGrid');
             const soldItems = games.filter(g => g.status === 'sold');
@@ -269,6 +271,7 @@
             document.getElementById('modalTitle').textContent = game.title;
             document.getElementById('modalCategory').textContent = game.category;
             document.getElementById('modalPrice').textContent = game.price;
+            document.getElementById('modalLogin').textContent = `Log: ${game.loginVia}`;
             
             const badge = document.getElementById('modalStatusBadge');
             badge.textContent = game.status === 'ready' ? 'Tersedia' : 'Terjual';
