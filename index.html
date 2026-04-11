@@ -1,3 +1,8 @@
+Tentu, saya telah menambahkan bagian **Admin Contact** di bagian bawah halaman. Bagian ini berupa kotak informasi yang bersih dengan tombol yang langsung terhubung ke WhatsApp admin menggunakan nomor yang sama dengan tombol pembelian.
+
+Berikut adalah kode yang telah diperbarui:
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -108,6 +113,26 @@
             </p>
         </div>
     </main>
+
+    <section class="max-w-7xl mx-auto p-4 md:p-10">
+        <div class="bg-white border border-slate-200 rounded-[32px] p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-600">
+                    <i data-lucide="headset" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h4 class="font-extrabold text-dark uppercase tracking-tight">Hubungi Admin</h4>
+                    <p class="text-slate-500 text-xs">Punya pertanyaan? Chat kami sekarang.</p>
+                </div>
+            </div>
+            <a id="adminChatBtn" href="#" target="_blank" class="w-full md:w-auto bg-green-500 text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 hover:bg-green-600 transition-colors">
+                <i data-lucide="message-square" class="w-5 h-5"></i> Chat WhatsApp
+            </a>
+        </div>
+        <div class="text-center mt-10 pb-10">
+            <p class="text-slate-400 text-[10px] font-medium uppercase tracking-[0.2em]">© 2026 RELLZYY STORE. All Rights Reserved.</p>
+        </div>
+    </section>
 
     <div id="modalOverlay" class="fixed inset-0 z-[100] items-center justify-center p-4" onclick="handleOutsideClick(event)">
         <div class="bg-white rounded-[32px] w-full max-w-lg overflow-hidden relative shadow-2xl">
@@ -320,7 +345,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateFilterUI();
             renderKatalog();
+            // Set Admin Chat Link
+            const adminChatBtn = document.getElementById('adminChatBtn');
+            const generalMessage = `Halo Admin ${CONFIG.storeName}, saya ingin bertanya mengenai akun yang ada di katalog.`;
+            adminChatBtn.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(generalMessage)}`;
         });
     </script>
 </body>
 </html>
+```
