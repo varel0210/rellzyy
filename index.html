@@ -305,4 +305,26 @@
 
         function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = 'auto'; }
         function handleOutsideClick(e) { if (e.target.id === 'modalOverlay') closeModal(); }
-        function openLightbox(src) { document.getElementById('lightboxImage').src = src; document.getElementById('l
+        function openLightbox(src) { document.getElementById('lightboxImage').src = src; document.getElementById('lightboxOverlay').classList.add('open'); }
+        function closeLightbox() { document.getElementById('lightboxOverlay').classList.remove('open'); }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
+            if (pageId === 'sold') renderSold();
+            if (pageId === 'home') renderKatalog();
+            window.scrollTo(0, 0);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateFilterUI();
+            renderKatalog();
+            const adminChatBtn = document.getElementById('adminChatBtn');
+            const generalMessage = `Halo Admin ${CONFIG.storeName}, saya ingin bertanya/menjual akun.`;
+            adminChatBtn.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(generalMessage)}`;
+        });
+    </script>
+</body>
+</html>
