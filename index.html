@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RELLZYY STORE — Marketplace Akun Tepercaya</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -15,148 +15,184 @@
                 extend: {
                     colors: {
                         primary: '#2563eb',
-                        secondary: '#dbeafe',
-                        dark: '#1e293b',
+                        secondary: '#3b82f6',
+                        dark: '#0f172a',
+                        accent: '#f59e0b'
                     },
-                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                 }
             }
         }
     </script>
 
     <style>
-        body { background-color: #f8fafc; color: #1e293b; scroll-behavior: smooth; }
-        .nav-link.active { color: #2563eb; font-weight: 700; border-bottom: 2px solid #2563eb; }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { background-color: #f1f5f9; color: #1e293b; scroll-behavior: smooth; }
+        .nav-link { transition: all 0.3s ease; position: relative; }
+        .nav-link.active { color: #2563eb; }
+        .nav-link.active::after { content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 20px; height: 3px; background: #2563eb; border-radius: 10px; }
         
-        #modalOverlay { display: none; background-color: rgba(30, 41, 59, 0.6); backdrop-filter: blur(8px); }
-        #modalOverlay.open { display: flex; }
+        .page { display: none; }
+        .page.active { display: block; animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        #modalOverlay { display: none; background-color: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); }
+        #modalOverlay.open { display: flex; z-index: 100; }
         #lightboxOverlay { display: none; background-color: rgba(0, 0, 0, 0.95); z-index: 200; }
         #lightboxOverlay.open { display: flex; }
 
-        .product-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; cursor: pointer; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1); border-color: #3b82f6; }
+        .product-card { 
+            background: white; 
+            border: 1px solid rgba(226, 232, 240, 0.8); 
+            border-radius: 24px; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            overflow: hidden; 
+        }
+        .product-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.15); 
+            border-color: #3b82f6; 
+        }
         
-        .status-ready { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .status-sold { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .status-ready { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-weight: 800; }
+        .status-sold { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; font-weight: 800; }
         
-        .img-container { height: 160px; width: 100%; overflow: hidden; background: #f1f5f9; position: relative; }
-        @media (min-width: 768px) { .img-container { height: 200px; } }
+        .img-container { 
+            height: 180px; 
+            width: 100%; 
+            overflow: hidden; 
+            background: #e2e8f0; 
+            position: relative; 
+            border-radius: 20px 20px 0 0;
+        }
+        @media (min-width: 768px) { .img-container { height: 220px; } }
         
-        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
-        .product-card:hover .img-container img { transform: scale(1.1); }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card:hover .img-container img { transform: scale(1.15); }
 
+        .glass-morphism { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="font-sans antialiased">
 
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 px-4 py-4 flex justify-between items-center shadow-sm">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-            <div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
-                <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+    <!-- Navbar Peningkatan: Glassmorphism & Animasi -->
+    <nav class="sticky top-0 z-50 glass-morphism border-b border-slate-200/50 px-4 md:px-8 py-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="showPage('home')">
+            <div class="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/40 group-hover:rotate-12 transition-transform">
+                <i data-lucide="shield-check" class="w-6 h-6"></i>
             </div>
-            <span class="font-extrabold text-lg tracking-tight text-dark uppercase">RELLZYY<span class="text-primary">STR</span></span>
+            <span class="font-black text-xl tracking-tight text-dark uppercase">RELLZYY<span class="text-primary">STR</span></span>
         </div>
-        <div class="flex gap-2 text-[10px] md:text-xs font-semibold">
-            <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="nav-link active px-2 md:px-3 py-2 rounded-lg">Katalog</a>
-            <a href="javascript:void(0)" id="nav-sold" onclick="showPage('sold')" class="nav-link px-2 md:px-3 py-2 rounded-lg">Terjual</a>
-            <a href="javascript:void(0)" id="nav-about" onclick="showPage('about')" class="nav-link px-2 md:px-3 py-2 rounded-lg">Tentang</a>
+        <div class="flex gap-4 text-xs font-bold uppercase tracking-wider">
+            <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="nav-link active px-2 py-1">Katalog</a>
+            <a href="javascript:void(0)" id="nav-sold" onclick="showPage('sold')" class="nav-link px-2 py-1">Terjual</a>
+            <a href="javascript:void(0)" id="nav-about" onclick="showPage('about')" class="nav-link px-2 py-1">Tentang</a>
         </div>
     </nav>
 
+    <!-- Header Section -->
     <main id="page-home" class="page active p-4 md:p-10 max-w-7xl mx-auto">
-        <div class="mb-8 text-center">
-            <h1 class="text-2xl md:text-4xl font-extrabold text-dark mb-2 uppercase">Katalog <span class="text-primary">Premium</span></h1>
-            <p class="text-slate-500 text-sm max-w-xs mx-auto">Cari akun impianmu berdasarkan kategori.</p>
+        <div class="mb-12 text-center">
+            <span class="bg-blue-100 text-primary text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] mb-4 inline-block">Best Marketplace 2026</span>
+            <h1 class="text-3xl md:text-5xl font-black text-dark mb-4 leading-tight uppercase">Katalog <span class="text-primary italic">Premium</span></h1>
+            <div class="w-16 h-1.5 bg-primary mx-auto rounded-full mb-6"></div>
+            <p class="text-slate-500 text-sm md:text-base max-w-md mx-auto font-medium leading-relaxed">Dapatkan akun game impianmu dengan keamanan tingkat tinggi dan harga bersaing.</p>
         </div>
 
-        <div class="flex gap-2 overflow-x-auto pb-6 hide-scrollbar justify-start md:justify-center">
-            <button onclick="setFilter('Semua')" id="filter-Semua" class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-slate-200 bg-white text-slate-500 shadow-sm">
+        <!-- Filter Modern -->
+        <div class="flex gap-3 overflow-x-auto pb-8 hide-scrollbar justify-start md:justify-center">
+            <button onclick="setFilter('Semua')" id="filter-Semua" class="filter-btn shrink-0 px-8 py-3 rounded-2xl text-xs font-bold transition-all border-2 border-slate-200 bg-white text-slate-500 hover:border-primary/50">
                 Semua
             </button>
-            <button onclick="setFilter('Free Fire')" id="filter-Free-Fire" class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-slate-200 bg-white text-slate-500 shadow-sm">
+            <button onclick="setFilter('Free Fire')" id="filter-Free-Fire" class="filter-btn shrink-0 px-8 py-3 rounded-2xl text-xs font-bold transition-all border-2 border-slate-200 bg-white text-slate-500 hover:border-primary/50">
                 Free Fire
             </button>
-            <button onclick="setFilter('Mobile Legends')" id="filter-Mobile-Legends" class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-slate-200 bg-white text-slate-500 shadow-sm">
+            <button onclick="setFilter('Mobile Legends')" id="filter-Mobile-Legends" class="filter-btn shrink-0 px-8 py-3 rounded-2xl text-xs font-bold transition-all border-2 border-slate-200 bg-white text-slate-500 hover:border-primary/50">
                 Mobile Legends
             </button>
         </div>
 
-        <div id="gameGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8"></div>
-        <div id="pagination" class="flex justify-center items-center gap-2 mt-10"></div>
+        <div id="gameGrid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8"></div>
+        <div id="pagination" class="flex justify-center items-center gap-3 mt-12"></div>
     </main>
 
     <main id="page-sold" class="page p-4 md:p-10 max-w-7xl mx-auto">
-        <div class="mb-8 text-center">
-            <h1 class="text-2xl md:text-4xl font-extrabold text-dark mb-2 uppercase">Akun <span class="text-red-500">Terjual</span></h1>
-            <p class="text-slate-500 text-sm max-w-xs mx-auto">Riwayat akun premium yang telah laku terjual.</p>
+        <div class="mb-12 text-center">
+            <h1 class="text-3xl md:text-5xl font-black text-dark mb-4 uppercase">Akun <span class="text-red-500 italic">Terjual</span></h1>
+            <p class="text-slate-500 text-sm max-w-xs mx-auto font-medium">Bukti nyata kepercayaan pelanggan kami.</p>
         </div>
-        <div id="soldGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8"></div>
+        <div id="soldGrid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8"></div>
     </main>
 
     <main id="page-about" class="page p-6 md:p-10 max-w-4xl mx-auto">
         <div class="text-center mb-12">
-            <h1 class="text-3xl font-extrabold text-dark mb-2 uppercase">Tentang <span class="text-primary">Kami</span></h1>
+            <h1 class="text-3xl font-black text-dark mb-2 uppercase italic">Tentang <span class="text-primary">Kami</span></h1>
         </div>
-        <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-            <p class="text-slate-600 leading-relaxed">
+        <div class="bg-white p-10 rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8 text-slate-50 opacity-10">
+                <i data-lucide="quote" class="w-32 h-32"></i>
+            </div>
+            <p class="text-slate-600 leading-loose text-lg font-medium relative z-10">
                 RELLZYY STORE adalah marketplace tepercaya bagi para gamers yang ingin mendapatkan akun berkualitas dengan proses instan. Kami berkomitmen untuk menyediakan layanan yang transparan, aman, dan responsif. Setiap akun yang kami tawarkan telah melewati tahap pengecekan keamanan untuk menjamin kepuasan pembeli.
             </p>
         </div>
     </main>
 
+    <!-- Support Section Peningkatan -->
     <section class="max-w-7xl mx-auto p-4 md:p-10">
-        <div class="bg-white border border-slate-200 rounded-[32px] p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-600">
-                    <i data-lucide="headset" class="w-6 h-6"></i>
+        <div class="bg-dark rounded-[40px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-900/20">
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-16 bg-blue-500/10 rounded-3xl flex items-center justify-center text-blue-400 border border-blue-500/20">
+                    <i data-lucide="messages-square" class="w-8 h-8"></i>
                 </div>
                 <div>
-                    <h4 class="font-extrabold text-dark uppercase tracking-tight">Hubungi Admin</h4>
-                    <p class="text-slate-500 text-xs">Punya pertanyaan? Chat kami sekarang.</p>
+                    <h4 class="text-2xl font-black text-white uppercase italic tracking-tight">Butuh Bantuan?</h4>
+                    <p class="text-slate-400 text-sm font-medium">CS Kami siap melayani 24/7 untuk Anda.</p>
                 </div>
             </div>
-            <a id="adminChatBtn" href="#" target="_blank" class="w-full md:w-auto bg-green-500 text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 hover:bg-green-600 transition-colors">
-                <i data-lucide="message-square" class="w-5 h-5"></i> Chat WhatsApp
+            <a id="adminChatBtn" href="#" target="_blank" class="w-full md:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-black flex items-center justify-center gap-3 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-blue-500/40">
+                <i data-lucide="phone" class="w-5 h-5"></i> HUBUNGI WHATSAPP
             </a>
         </div>
-        <div class="text-center mt-10 pb-10">
-            <p class="text-slate-400 text-[10px] font-medium uppercase tracking-[0.2em]">© 2026 RELLZYY STORE. All Rights Reserved.</p>
+        <div class="text-center mt-12 pb-12">
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">© 2026 RELLZYY STORE • Secured Marketplace</p>
         </div>
     </section>
 
+    <!-- Modal Detail Peningkatan UI -->
     <div id="modalOverlay" class="fixed inset-0 z-[100] items-center justify-center p-4" onclick="handleOutsideClick(event)">
-        <div class="bg-white rounded-[32px] w-full max-w-lg overflow-hidden relative shadow-2xl">
-            <div class="relative h-56 md:h-64 w-full overflow-hidden bg-slate-100">
+        <div class="bg-white rounded-[40px] w-full max-w-xl overflow-hidden relative shadow-[0_0_100px_rgba(0,0,0,0.3)] border border-white/20">
+            <div class="relative h-64 md:h-80 w-full overflow-hidden bg-slate-100">
                 <img id="modalImage" src="" alt="Detail" class="w-full h-full object-cover cursor-zoom-in" onclick="openLightbox(this.src)">
-                <div id="modalStatusBadge" class="absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase shadow-lg"></div>
-                <div class="absolute bottom-2 left-0 right-0 text-center pointer-events-none">
-                    <span class="bg-black/50 text-white text-[9px] px-3 py-1 rounded-full backdrop-blur-sm">Pencet gambar untuk memperbesar</span>
+                <div id="modalStatusBadge" class="absolute top-6 right-6 px-6 py-2 rounded-2xl text-xs font-black uppercase shadow-xl border-2"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-6 left-6 right-6 text-white">
+                    <span id="modalCategory" class="text-[10px] uppercase font-black tracking-widest text-blue-400 mb-2 block"></span>
+                    <h3 id="modalTitle" class="text-2xl md:text-3xl font-black leading-tight italic"></h3>
                 </div>
             </div>
-            <div class="p-6 md:p-8">
-                <div class="flex justify-between items-start mb-4 border-b border-slate-100 pb-4">
-                    <div>
-                        <span id="modalCategory" class="text-[9px] uppercase font-black text-primary tracking-widest"></span>
-                        <h3 id="modalTitle" class="text-xl font-extrabold text-dark mt-1 leading-tight"></h3>
-                        <div class="mt-1 flex items-center gap-1.5">
-                            <i data-lucide="key-round" class="w-3 h-3 text-slate-400"></i>
-                            <span id="modalLogin" class="text-[10px] font-bold text-slate-500"></span>
-                        </div>
+            <div class="p-8">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+                    <div class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100">
+                        <i data-lucide="key-round" class="w-4 h-4 text-primary"></i>
+                        <span id="modalLogin" class="text-xs font-black text-slate-600 uppercase tracking-wider"></span>
                     </div>
-                    <div id="modalPrice" class="text-md font-black text-primary bg-blue-50 px-3 py-2 rounded-xl h-fit"></div>
+                    <div id="modalPrice" class="text-2xl font-black text-primary italic"></div>
                 </div>
-                <div class="mb-6">
-                    <ul id="modalIncludes" class="grid grid-cols-1 gap-2"></ul>
+                
+                <div class="mb-8">
+                    <h5 class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-4">Spesifikasi Akun:</h5>
+                    <ul id="modalIncludes" class="grid grid-cols-1 md:grid-cols-2 gap-3"></ul>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <button onclick="closeModal()" class="bg-slate-100 text-slate-600 py-3 px-6 rounded-xl font-bold">Tutup</button>
-                    <a id="btnHubungi" href="#" target="_blank" class="flex-grow bg-primary text-white py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i> Beli Sekarang
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="closeModal()" class="order-2 sm:order-1 bg-slate-100 text-slate-500 py-4 px-8 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-colors">Kembali</button>
+                    <a id="btnHubungi" href="#" target="_blank" class="order-1 sm:order-2 flex-grow bg-primary text-white py-4 px-8 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-blue-500/30 hover:scale-[1.02] transition-transform">
+                        <i data-lucide="shopping-cart" class="w-4 h-4"></i> Beli Sekarang
                     </a>
                 </div>
             </div>
@@ -164,14 +200,13 @@
     </div>
 
     <div id="lightboxOverlay" class="fixed inset-0 items-center justify-center p-4 cursor-zoom-out" onclick="closeLightbox()">
-        <img id="lightboxImage" src="" class="max-w-full max-h-full rounded-lg shadow-2xl">
+        <img id="lightboxImage" src="" class="max-w-[95%] max-h-[90%] rounded-2xl shadow-2xl border-4 border-white/10">
     </div>
 
     <script>
+        // --- DATA & LOGIC TETAP SAMA SEPERTI ASLINYA ---
         const games = [
-            // ready
             { id: 14, title: 'Xm8 max, Sg winter + trompet', price: 'Rp 300.000', category: 'Free Fire', loginVia: 'Google', image: 'img/IMG_20260501_113032_117.webp', status: 'ready', includes: ['Xm8 max', 'Sg winter + trompet', 'Vault 400+', 'Prime asli 4 tw 5'] },
-            // sold
             { id: 1, title: 'Vault 260+, SG kayu, Fist opm', price: 'Rp 65.000', category: 'Free Fire', loginVia: 'Facebook', image: 'img/IMG_20260411_135214_367.webp', status: 'sold', includes: ['Sold'] },
             { id: 3, title: 'Karina KOF', price: 'Rp 50.000', category: 'Mobile Legends', loginVia: 'Moonton', image: 'img/karinakof.jpeg', status: 'sold', includes: ['Sold'] },
             { id: 4, title: 'Vault 250+, Evo scar mega, SG kayu', price: 'Rp 70.000', category: 'Free Fire', loginVia: 'Facebook', image: 'img/IMG_20260410_131935_752.webp', status: 'sold', includes: ['Sold'] },
@@ -190,7 +225,7 @@
         const CONFIG = {
             adminWA: "62895331114471",
             storeName: "RELLZYY STORE",
-            itemsPerPage: 4
+            itemsPerPage: 8 // Dinaikkan untuk tampilan grid yang lebih padat
         };
 
         let currentPage = 1;
@@ -205,29 +240,27 @@
 
         function updateFilterUI() {
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                btn.classList.remove('bg-primary', 'text-white', 'border-primary', 'shadow-lg', 'shadow-blue-500/30');
                 btn.classList.add('bg-white', 'text-slate-500', 'border-slate-200');
             });
             const activeBtn = document.getElementById(`filter-${currentFilter.replace(/\s+/g, '-')}`);
             if (activeBtn) {
                 activeBtn.classList.remove('bg-white', 'text-slate-500', 'border-slate-200');
-                activeBtn.classList.add('bg-primary', 'text-white', 'border-primary');
+                activeBtn.classList.add('bg-primary', 'text-white', 'border-primary', 'shadow-lg', 'shadow-blue-500/30');
             }
         }
 
         function renderKatalog() {
             const grid = document.getElementById('gameGrid');
             const paginationContainer = document.getElementById('pagination');
-            
             const readyItems = games.filter(g => g.status === 'ready');
             const filteredData = currentFilter === 'Semua' ? readyItems : readyItems.filter(g => g.category === currentFilter);
-
             const startIndex = (currentPage - 1) * CONFIG.itemsPerPage;
             const endIndex = startIndex + CONFIG.itemsPerPage;
             const paginatedItems = filteredData.slice(startIndex, endIndex);
 
             if (paginatedItems.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 lg:col-span-3 text-center py-20 text-slate-400 text-sm">Produk tidak ditemukan...</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-20 text-slate-400 font-medium">Belum ada produk untuk kategori ini...</div>`;
             } else {
                 grid.innerHTML = paginatedItems.map(game => createCardHTML(game)).join('');
             }
@@ -237,7 +270,7 @@
             if (totalPages > 1) {
                 for (let i = 1; i <= totalPages; i++) {
                     paginationHTML += `
-                        <button onclick="changePage(${i})" class="w-8 h-8 rounded-lg font-bold text-xs transition-all border ${currentPage === i ? 'bg-primary text-white border-primary' : 'bg-white text-slate-400 border-slate-200'}">
+                        <button onclick="changePage(${i})" class="w-10 h-10 rounded-xl font-black text-xs transition-all border-2 ${currentPage === i ? 'bg-primary text-white border-primary shadow-lg shadow-blue-500/30' : 'bg-white text-slate-400 border-slate-200 hover:border-primary/50'}">
                             ${i}
                         </button>`;
                 }
@@ -249,9 +282,8 @@
         function renderSold() {
             const grid = document.getElementById('soldGrid');
             const soldItems = games.filter(g => g.status === 'sold');
-
             if (soldItems.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 lg:col-span-3 text-center py-20 text-slate-400 text-sm">Belum ada riwayat akun terjual.</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-20 text-slate-400 font-medium">Belum ada riwayat akun terjual.</div>`;
             } else {
                 grid.innerHTML = soldItems.map(game => createCardHTML(game)).join('');
             }
@@ -263,20 +295,17 @@
                 <div class="product-card group flex flex-col relative" onclick="openDetail(${game.id})">
                     <div class="img-container">
                         <img src="${game.image}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-                        <div class="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-full text-[8px] font-black uppercase ${game.status === 'ready' ? 'status-ready' : 'status-sold'} shadow-sm">
+                        <div class="absolute top-3 right-3 z-10 px-3 py-1 rounded-xl text-[9px] uppercase tracking-tighter ${game.status === 'ready' ? 'status-ready' : 'status-sold'} shadow-lg">
                             ${game.status === 'ready' ? 'Tersedia' : 'Terjual'}
                         </div>
-                        <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span class="bg-white text-primary text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Lihat Detail Akun</span>
-                        </div>
                     </div>
-                    <div class="p-3 md:p-5 flex flex-col flex-grow">
-                        <div class="text-[8px] uppercase font-black text-primary tracking-widest mb-1">${game.category}</div>
-                        <h3 class="text-xs md:text-base font-bold text-dark mb-2 leading-tight flex-grow line-clamp-2">${game.title}</h3>
-                        <div class="flex justify-between items-center border-t border-slate-50 pt-3">
-                            <span class="text-primary font-black text-sm md:text-lg">${game.price}</span>
-                            <div class="text-[9px] font-bold text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1">
-                                Detail <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    <div class="p-4 md:p-6 flex flex-col flex-grow">
+                        <div class="text-[9px] uppercase font-black text-primary tracking-[0.2em] mb-2">${game.category}</div>
+                        <h3 class="text-sm md:text-lg font-extrabold text-dark mb-4 leading-snug flex-grow line-clamp-2 italic">${game.title}</h3>
+                        <div class="flex justify-between items-center border-t border-slate-50 pt-4">
+                            <span class="text-primary font-black text-base md:text-xl italic">${game.price}</span>
+                            <div class="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             </div>
                         </div>
                     </div>
@@ -301,10 +330,10 @@
             
             const badge = document.getElementById('modalStatusBadge');
             badge.textContent = game.status === 'ready' ? 'Tersedia' : 'Terjual';
-            badge.className = `absolute top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg ${game.status === 'ready' ? 'status-ready' : 'status-sold'}`;
+            badge.className = `absolute top-6 right-6 px-6 py-2 rounded-2xl text-xs font-black uppercase tracking-tighter shadow-xl ${game.status === 'ready' ? 'status-ready' : 'status-sold'}`;
             
             document.getElementById('modalIncludes').innerHTML = game.includes.map(item => `
-                <li class="flex items-center gap-3 text-slate-600 text-xs">
+                <li class="flex items-center gap-3 text-slate-600 text-sm font-semibold bg-slate-50 p-3 rounded-xl border border-slate-100">
                     <i data-lucide="check-circle-2" class="w-4 h-4 text-primary shrink-0"></i> ${item}
                 </li>`).join('');
             
@@ -315,7 +344,7 @@
             } else {
                 btnWA.classList.remove('pointer-events-none', 'bg-slate-400');
                 btnWA.classList.add('bg-primary');
-                btnWA.innerHTML = `<i data-lucide="message-circle" class="w-4 h-4"></i> Beli Sekarang`;
+                btnWA.innerHTML = `<i data-lucide="shopping-cart" class="w-4 h-4"></i> Beli Sekarang`;
                 const waMessage = `━━━━━━━━━━━━━━━━━━━━━━\n🔥 *ORDER AKUN - ${CONFIG.storeName}* 🔥\n━━━━━━━━━━━━━━━━━━━━━━\n            \n👋 Halo admin saya ingin memesan akun ini, apakah masih Tersedia?\n            \n📌 *Produk:* ${game.title}\n📂 *Kategori:* ${game.category}\n💰 *Harga:* ${game.price}\n\n📝 *Detail Pembeli:*\n👤 *Atas Nama:* \n🤝 *MC/Setempat:*`;
                 btnWA.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(waMessage)}`;
             }
@@ -335,17 +364,14 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             document.getElementById('nav-' + pageId).classList.add('active');
-            
             if (pageId === 'sold') renderSold();
             if (pageId === 'home') renderKatalog();
-            
             window.scrollTo(0, 0);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             updateFilterUI();
             renderKatalog();
-            // Set Admin Chat Link
             const adminChatBtn = document.getElementById('adminChatBtn');
             const generalMessage = `Halo Admin ${CONFIG.storeName}, saya ingin bertanya mengenai akun yang ada di katalog.`;
             adminChatBtn.href = `https://wa.me/${CONFIG.adminWA}?text=${encodeURIComponent(generalMessage)}`;
